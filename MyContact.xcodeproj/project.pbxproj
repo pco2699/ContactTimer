@@ -12,6 +12,8 @@
 		73589C991EE49F6900626D8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73589C971EE49F6900626D8D /* Main.storyboard */; };
 		73589C9B1EE49F6900626D8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73589C9A1EE49F6900626D8D /* Assets.xcassets */; };
 		73589C9E1EE49F6900626D8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73589C9C1EE49F6900626D8D /* LaunchScreen.storyboard */; };
+		73589CA61EE49FBE00626D8D /* MyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73589CA51EE49FBE00626D8D /* MyButton.swift */; };
+		73589CA81EE81FA200626D8D /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73589CA71EE81FA200626D8D /* SettingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		73589C9A1EE49F6900626D8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		73589C9D1EE49F6900626D8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		73589C9F1EE49F6900626D8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		73589CA51EE49FBE00626D8D /* MyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyButton.swift; sourceTree = "<group>"; };
+		73589CA71EE81FA200626D8D /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +61,11 @@
 				73589C931EE49F6900626D8D /* AppDelegate.swift */,
 				73589C951EE49F6900626D8D /* ViewController.swift */,
 				73589C971EE49F6900626D8D /* Main.storyboard */,
+				73589CA71EE81FA200626D8D /* SettingViewController.swift */,
 				73589C9A1EE49F6900626D8D /* Assets.xcassets */,
 				73589C9C1EE49F6900626D8D /* LaunchScreen.storyboard */,
 				73589C9F1EE49F6900626D8D /* Info.plist */,
+				73589CA51EE49FBE00626D8D /* MyButton.swift */,
 			);
 			path = MyContact;
 			sourceTree = "<group>";
@@ -139,6 +145,8 @@
 			files = (
 				73589C961EE49F6900626D8D /* ViewController.swift in Sources */,
 				73589C941EE49F6900626D8D /* AppDelegate.swift in Sources */,
+				73589CA61EE49FBE00626D8D /* MyButton.swift in Sources */,
+				73589CA81EE81FA200626D8D /* SettingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
