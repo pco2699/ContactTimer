@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class ViewController: UIViewController {
   // 期限を設定する変数を設定
@@ -20,6 +21,15 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
+    
+    // current() メソッドを使用してシングルトンオブジェクトを取得
+    let center = UNUserNotificationCenter.current()
+    
+    // 通知の使用許可をリクエスト
+    center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+      // Enable or disable features based on authorization.
+    }
+
     
     // UserDefaulsのインスタンスを生成
     let settings = UserDefaults.standard
@@ -71,7 +81,7 @@ class ViewController: UIViewController {
     // UserDefaultsのインスタンスを生成
     let settings = UserDefaults.standard
     
-    // UserDefaultsに次に日程を設定
+    // UserDefaultsに次の日程を設定
     settings.setValue(deadline_date, forKey: "deadline_date")
     settings.synchronize()
   }
@@ -80,6 +90,7 @@ class ViewController: UIViewController {
     // 設定画面へ画面遷移
     performSegue(withIdentifier: "goSetting", sender: nil)
   }
+
   
 }
 
