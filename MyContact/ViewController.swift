@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     // 現在の日付のDate型を取得
     today_date = Date()
 
-    // もしUserDefaultsからデータを取得できなかった場合、データ登録
+    // もしUserDefaultsからデータを取得できなかった場合、初期値登録
     if deadline_date == nil {
       deadline_days = 14
       deadline_date = calendar.date(byAdding: .day, value: deadline_days!, to: today_date!)

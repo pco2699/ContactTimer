@@ -13,6 +13,13 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // Pickerの色を変える設定
+    dateSettingPicker.setValue(UIColor.white, forKey: "textColor")
+    dateSettingPicker.setValue(false, forKey: "highlightsToday")
+    
+    alarmTimePicker.setValue(UIColor.white, forKey: "textColor")
+    alarmTimePicker.setValue(false, forKey: "highlightsToday")
+    
     // Do any additional setup after loading the view.
   }
   
