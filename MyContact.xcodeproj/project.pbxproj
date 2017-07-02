@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		730D87BC1F03D82200E1FE2C /* EditableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730D87BB1F03D82200E1FE2C /* EditableButton.swift */; };
 		73589C941EE49F6900626D8D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73589C931EE49F6900626D8D /* AppDelegate.swift */; };
 		73589C961EE49F6900626D8D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73589C951EE49F6900626D8D /* ViewController.swift */; };
 		73589C991EE49F6900626D8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73589C971EE49F6900626D8D /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		730D87BB1F03D82200E1FE2C /* EditableButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditableButton.swift; sourceTree = "<group>"; };
 		73589C901EE49F6900626D8D /* MyContact.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyContact.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73589C931EE49F6900626D8D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		73589C951EE49F6900626D8D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 				73589C9C1EE49F6900626D8D /* LaunchScreen.storyboard */,
 				73589C9F1EE49F6900626D8D /* Info.plist */,
 				73589CA51EE49FBE00626D8D /* MyButton.swift */,
+				730D87BB1F03D82200E1FE2C /* EditableButton.swift */,
 			);
 			path = MyContact;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 				73589C961EE49F6900626D8D /* ViewController.swift in Sources */,
 				73589C941EE49F6900626D8D /* AppDelegate.swift in Sources */,
 				73589CA61EE49FBE00626D8D /* MyButton.swift in Sources */,
+				730D87BC1F03D82200E1FE2C /* EditableButton.swift in Sources */,
 				73589CA81EE81FA200626D8D /* SettingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

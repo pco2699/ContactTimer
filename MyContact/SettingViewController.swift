@@ -10,8 +10,16 @@ import UIKit
 import UserNotifications
 
 class SettingViewController: UIViewController, UNUserNotificationCenterDelegate {
+  // 本日の日付を設定する定数
+  var today_date: Date?
+  // カレンダー設定
+  var calendar: Calendar?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    // カレンダーを西暦に設定
+    calendar = Calendar(identifier: .gregorian)
     
     // Pickerの色を変える設定
     dateSettingPicker.setValue(UIColor.white, forKey: "textColor")
@@ -21,6 +29,19 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     alarmTimePicker.setValue(false, forKey: "highlightsToday")
     
     // Do any additional setup after loading the view.
+    
+    // UserDefaulsのインスタンスを生成
+    let settings = UserDefaults.standard
+    
+    // UserDefaultsからコンタクトの期限を取得
+    let deadline_date = settings.object(forKey: "deadline_date") as? Date
+    
+    // UserDefaultsから現在日付を取得
+    today_date = Date()
+    
+    // Pickerに設定
+    dateSettingPicker.date = deadline_date!
+    alarmTimePicker.date = deadline_date!
   }
   
   override func didReceiveMemoryWarning() {
@@ -42,14 +63,16 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   @IBOutlet weak var alarmSwitch: UISwitch!
   @IBOutlet weak var alarmTimePicker: UIDatePicker!
   
+  // 通知設定がON/OFFされたときに呼び出されるAction
   @IBAction func switchChangedAciton(_ sender: Any) {
-    let calendar = Calendar(identifier: .gregorian)
     let alarm_date = dateSettingPicker.date
     let alarm_time = alarmTimePicker.date
     
-    let settingDate = DateComponents(year: calendar.component(.year, from: alarm_date), month: calendar.component(.month, from: alarm_date), day: calendar.component(.day, from: alarm_date),
-                                     hour: calendar.component(.hour, from: alarm_time), minute: calendar.component(.minute, from: alarm_time))
+    // 設定された時刻からDateComponetsを設定
+    let settingDate = DateComponents(year: calendar?.component(.year, from: alarm_date), month: calendar?.component(.month, from: alarm_date), day: calendar?.component(.day, from: alarm_date),
+                                     hour: calendar?.component(.hour, from: alarm_time), minute: calendar?.component(.minute, from: alarm_time))
 
+    // もしアラームスイッチがONならばローカル通知設定
     if alarmSwitch.isOn {
       setLocalNotification(settingDate)
     }
@@ -58,18 +81,8 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     }
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    // UserDefaulsのインスタンスを生成
-    let settings = UserDefaults.standard
-    
-    // UserDefaultsからデータを取得
-    let deadline_date = settings.object(forKey: "deadline_date") as? Date
-    // var deadline_days = settings.integer(forKey: "deadline_days")
-    
-    dateSettingPicker.date = deadline_date!
-    alarmTimePicker.date = deadline_date!
-  }
   
+  // 期限日付を変更されるAction
   @IBAction func dateChangedAction(_ sender: Any) {
     // UserDefaulsのインスタンスを生成
     let settings = UserDefaults.standard
@@ -80,6 +93,7 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   
   }
   
+  // ローカル通知を設定する関数
   func setLocalNotification(_ date: DateComponents) {
     // UNMutableNotificationContent 作成
     let content = UNMutableNotificationContent()
@@ -100,6 +114,7 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     center.delegate = self;
   }
   
+  // ローカル通知を削除する関数
   func deleteLocalNotification(_ identifier: String) {
     // UNUserNotificationCenter に request を追加
     let center = UNUserNotificationCenter.current()
@@ -115,5 +130,25 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     
     present(alert, animated: true, completion: nil)
   }
+  @IBOutlet weak var o_w_button_outlet: EditableButton!
+  @IBOutlet weak var t_w_button_outlet: EditableButton!
+  @IBOutlet weak var o_m_button_outlet: EditableButton!
   
+  @IBAction func o_w_button_action(_ sender: Any) {
+    o_m_button_outlet.isEnabled = false
+    t_w_button_outlet.isEnabled = true
+    o_m_button_outlet.isEnabled = true
+  }
+  
+  @IBAction func t_w_button_action(_ sender: Any) {
+    o_m_button_outlet.isEnabled = true
+    t_w_button_outlet.isEnabled = false
+    o_m_button_outlet.isEnabled = true
+  }
+  
+  @IBAction func o_m_button_action(_ sender: Any) {
+    o_m_button_outlet.isEnabled = true
+    t_w_button_outlet.isEnabled = true
+    o_m_button_outlet.isEnabled = false
+  }
 }
