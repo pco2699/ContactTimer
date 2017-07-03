@@ -135,20 +135,41 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   @IBOutlet weak var o_m_button_outlet: EditableButton!
   
   @IBAction func o_w_button_action(_ sender: Any) {
-    o_m_button_outlet.isEnabled = false
-    t_w_button_outlet.isEnabled = true
-    o_m_button_outlet.isEnabled = true
+    // 1週間ボタンが押されたので、そのボタンを不活性にし
+    // それ以外を活性にする
+    changeButtonState(button: o_w_button_outlet, state: false)
+    changeButtonState(button: t_w_button_outlet, state: true)
+    changeButtonState(button: o_m_button_outlet, state: true)
   }
   
   @IBAction func t_w_button_action(_ sender: Any) {
-    o_m_button_outlet.isEnabled = true
-    t_w_button_outlet.isEnabled = false
-    o_m_button_outlet.isEnabled = true
+    // 2週間ボタンが押されたので、そのボタンを不活性にし
+    // それ以外を活性にする
+    changeButtonState(button: o_w_button_outlet, state: true)
+    changeButtonState(button: t_w_button_outlet, state: false)
+    changeButtonState(button: o_m_button_outlet, state: true)
   }
   
   @IBAction func o_m_button_action(_ sender: Any) {
-    o_m_button_outlet.isEnabled = true
-    t_w_button_outlet.isEnabled = true
-    o_m_button_outlet.isEnabled = false
+    // 1ヶ月ボタンが押されたので、そのボタンを不活性にし
+    // それ以外を活性にする
+    changeButtonState(button: o_w_button_outlet, state: true)
+    changeButtonState(button: t_w_button_outlet, state: true)
+    changeButtonState(button: o_m_button_outlet, state: false)
+  }
+  
+  // ボタンの見た目・活性不活性を変える関数
+  // state:true=>活性 state:false=>不活性
+  func changeButtonState(button: UIButton, state: Bool){
+    button.isEnabled = state
+
+    // もしstateがtrueなら色を灰色にして、活性にする
+    if state {
+      button.backgroundColor = UIColor.gray
+    }
+    // もしstateがfalseなら色を白色にして、不活性にする
+    else {
+      button.backgroundColor = UIColor.white
+    }
   }
 }
