@@ -8,7 +8,7 @@
 
 import UIKit
 
-@IBDesignable class EditableButton: UIButton {
+class EditableButton: UIButton {
   
   /*
    // Only override draw() if you perform custom drawing.
@@ -17,9 +17,9 @@ import UIKit
    // Drawing code
    }
    */
-  @IBInspectable var cornerRadius:CGFloat = 0.0
-  @IBInspectable var borderColor:UIColor = UIColor.clear
-  @IBInspectable var borderWidth:CGFloat = 0.0
+  var cornerRadius:CGFloat = 0.0
+  var borderColor:UIColor = UIColor.clear
+  var borderWidth:CGFloat = 0.0
   
   
   override func draw(_ rect: CGRect) {

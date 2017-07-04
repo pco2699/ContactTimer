@@ -62,6 +62,13 @@ class ViewController: UIViewController {
       deadline_days = 0
     }
     
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    // UserDefaultsのインスタンスを生成
+    let settings = UserDefaults.standard
+    
+    deadline_days = settings.integer(forKey: "deadline_days")
     daysLabel.text = deadline_days?.description
   }
 

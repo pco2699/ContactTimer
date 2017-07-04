@@ -14,6 +14,9 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   var today_date: Date?
   // カレンダー設定
   var calendar: Calendar?
+  // コンタクト期限
+  var deadline_date: Date?
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -30,11 +33,31 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     
     // Do any additional setup after loading the view.
     
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
     // UserDefaulsのインスタンスを生成
     let settings = UserDefaults.standard
     
     // UserDefaultsからコンタクトの期限を取得
-    let deadline_date = settings.object(forKey: "deadline_date") as? Date
+    deadline_date = settings.object(forKey: "deadline_date") as? Date
+    
+    // UserDefaultsからコンタクトの期限日数を取得
+    let deadline_days = settings.integer(forKey: "deadline_days")
+
+    switch deadline_days {
+    case 14:
+      t_w_button_action(self)
+      break
+    case 30:
+      o_m_button_action(self)
+      break
+    case 7:
+      o_w_button_action(self)
+      break
+    default:
+      break
+    }
     
     // UserDefaultsから現在日付を取得
     today_date = Date()
@@ -42,6 +65,7 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     // Pickerに設定
     dateSettingPicker.date = deadline_date!
     alarmTimePicker.date = deadline_date!
+    
   }
   
   override func didReceiveMemoryWarning() {
@@ -101,7 +125,7 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     content.body = "コンタクトの期限がきました"
     content.sound = .default()
     
-    // 5秒後に発火する UNTimeIntervalNotificationTrigger 作成、
+    // UNTimeIntervalNotificationTrigger 作成、
     let trigger = UNCalendarNotificationTrigger.init(dateMatching: date, repeats: false)
     
     // identifier, content, trigger から UNNotificationRequest 作成
@@ -140,6 +164,9 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     changeButtonState(button: o_w_button_outlet, state: false)
     changeButtonState(button: t_w_button_outlet, state: true)
     changeButtonState(button: o_m_button_outlet, state: true)
+    
+    changeDeadlineDate(sender, days: 7)
+    
   }
   
   @IBAction func t_w_button_action(_ sender: Any) {
@@ -148,6 +175,9 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     changeButtonState(button: o_w_button_outlet, state: true)
     changeButtonState(button: t_w_button_outlet, state: false)
     changeButtonState(button: o_m_button_outlet, state: true)
+    
+    changeDeadlineDate(sender, days: 14)
+    
   }
   
   @IBAction func o_m_button_action(_ sender: Any) {
@@ -156,7 +186,38 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     changeButtonState(button: o_w_button_outlet, state: true)
     changeButtonState(button: t_w_button_outlet, state: true)
     changeButtonState(button: o_m_button_outlet, state: false)
+    
+    changeDeadlineDate(sender, days: 30)
   }
+  
+  func changeDeadlineDate(_ sender: Any, days deadline_days: Int) {
+    // ボタンとして叩かれた場合のみ期限を設定する
+    if sender is UIButton {
+      
+      if let today_date_wrd = today_date, let calendar_wrd = calendar {
+        // 期限を現在の日付 + 期限日付にする
+        let new_deadline_date = calendar_wrd.date(byAdding: .day, value: deadline_days, to: today_date_wrd)
+        
+        // 期限日付をpickerに設定する
+        dateSettingPicker.date = new_deadline_date ?? Date()
+        alarmTimePicker.date = new_deadline_date ?? Date()
+        
+        // UserDefaulsのインスタンスを生成
+        let settings = UserDefaults.standard
+        
+        // 設定したdeadlinedaysをNSDefaultsに設定する
+        settings.setValue(deadline_days, forKey: "deadline_days")
+        
+        // 設定したdeadlinedateをNSDefaultsに設定する
+        settings.setValue(new_deadline_date, forKey: "deadline_date")
+
+        // 同期させる
+        settings.synchronize()
+      }
+    }
+  }
+  
+  
   
   // ボタンの見た目・活性不活性を変える関数
   // state:true=>活性 state:false=>不活性
