@@ -127,6 +127,9 @@
                                     <!--2017-06-04 20:33:38 +0000-->
                                 </date>
                                 <locale key="locale" localeIdentifier="ja_JP"/>
+                                <connections>
+                                    <action selector="dateChangedAction:" destination="egH-UP-7h3" eventType="valueChanged" id="TVV-zP-HIg"/>
+                                </connections>
                             </datePicker>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CCv-Kn-Plb">
                                 <rect key="frame" x="0.0" y="80" width="0.0" height="325"/>

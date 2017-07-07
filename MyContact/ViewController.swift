@@ -16,6 +16,8 @@ class ViewController: UIViewController {
   var today_date : Date?
   // コンタクトの期限日数を設定
   var deadline_days : Int?
+  // カレンダーを保持する変数
+  var calendar: Calendar?
   
 
   override func viewDidLoad() {
@@ -29,7 +31,6 @@ class ViewController: UIViewController {
     center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
       // Enable or disable features based on authorization.
     }
-
     
     // UserDefaulsのインスタンスを生成
     let settings = UserDefaults.standard
@@ -39,8 +40,7 @@ class ViewController: UIViewController {
     deadline_days = settings.integer(forKey: "deadline_days")
     
     // 西暦対応するため gregorianに設定
-    let calendar = Calendar(identifier: .gregorian)
-    
+    calendar = Calendar(identifier: .gregorian)
     
     // 現在の日付のDate型を取得
     today_date = Date()
@@ -48,28 +48,31 @@ class ViewController: UIViewController {
     // もしUserDefaultsからデータを取得できなかった場合、初期値登録
     if deadline_date == nil {
       deadline_days = 14
-      deadline_date = calendar.date(byAdding: .day, value: deadline_days!, to: today_date!)
+      deadline_date = calendar?.date(byAdding: .day, value: deadline_days!, to: today_date!)
+      let alarm_time = calendar?.date(from: DateComponents(hour: 07, minute: 00, second: 00))
       
       // UserDefaultsに初期値を登録
-      settings.register(defaults: ["deadline_date": deadline_date!, "deadline_days": deadline_days!])
+      settings.register(defaults: ["deadline_date": deadline_date!, "deadline_days": deadline_days!, "alarm_time": alarm_time!])
     }
-    
-    // 現在の残り日数を計算
-    deadline_days = calendar.dateComponents([.day], from: today_date!, to: deadline_date!).day
-    
-    // 0日以下だったら0に設定
-    if deadline_days! < 0 {
-      deadline_days = 0
-    }
-    
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    // UserDefaultsのインスタンスを生成
+    // UserDefaulsのインスタンスを生成
     let settings = UserDefaults.standard
     
-    deadline_days = settings.integer(forKey: "deadline_days")
-    daysLabel.text = deadline_days?.description
+    // UserDefaultsからコンタクトの期限を取得
+    deadline_date = settings.object(forKey: "deadline_date") as? Date
+    
+    // 現在の残り日数を計算
+    var deadline_days_now = calendar?.dateComponents([.day], from: today_date!, to: deadline_date!).day
+    
+    // 0日以下だったら0に設定
+    if deadline_days_now! < 0 {
+      deadline_days_now = 0
+    }
+    
+    daysLabel.text = deadline_days_now?.description
+    
   }
 
   override func didReceiveMemoryWarning() {
@@ -79,10 +82,10 @@ class ViewController: UIViewController {
   @IBOutlet weak var daysLabel: UILabel!
   
   @IBAction func resetButtonAction(_ sender: Any) {
-    // 西暦対応するため gregorianに設定
-    let calendar = Calendar(identifier: .gregorian)
-
-    deadline_date = calendar.date(byAdding: .day, value: deadline_days!, to: today_date!)
+    // deadline_dateをdeadline_daysを加算する。
+    deadline_date = calendar?.date(byAdding: .day, value: deadline_days!, to: today_date!)
+    
+    // ラベルを設定
     daysLabel.text = deadline_days?.description
     
     // UserDefaultsのインスタンスを生成
@@ -97,7 +100,5 @@ class ViewController: UIViewController {
     // 設定画面へ画面遷移
     performSegue(withIdentifier: "goSetting", sender: nil)
   }
-
-  
 }
 
