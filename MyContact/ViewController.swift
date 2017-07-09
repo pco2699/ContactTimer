@@ -52,8 +52,9 @@ class ViewController: UIViewController {
       let alarm_time = calendar?.date(from: DateComponents(hour: 07, minute: 00, second: 00))
       
       // UserDefaultsに初期値を登録
-      settings.register(defaults: ["deadline_date": deadline_date!, "deadline_days": deadline_days!, "alarm_time": alarm_time!])
+      settings.register(defaults: ["deadline_date": deadline_date!, "deadline_days": deadline_days!, "alarm_time": alarm_time!, "alarm_switch_state": false])
     }
+    
   }
   
   override func viewWillAppear(_ animated: Bool) {

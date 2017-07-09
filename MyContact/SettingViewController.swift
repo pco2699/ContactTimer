@@ -16,7 +16,8 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   var calendar: Calendar?
   // コンタクト期限
   var deadline_date: Date?
-  
+  // アラーム時刻
+  var alarm_time: Date?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -33,6 +34,34 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     
     // Do any additional setup after loading the view.
     
+    //トップに戻るボタンを作成
+    let leftButton = UIBarButtonItem(title: "戻る", style: UIBarButtonItemStyle.plain, target: self, action: #selector(goTop))
+    self.navigationItem.leftBarButtonItem = leftButton
+  }
+  
+  func goTop(){
+    // 保存アラートを出す
+    let alert = UIAlertController(title: "確認", message: "設定値を保存します", preferredStyle:  UIAlertControllerStyle.alert)
+    
+    let defaultAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler:{
+      // ボタンが押された時の処理を書く（クロージャ実装）
+      (action: UIAlertAction!) -> Void in
+      
+      self.saveParameters()
+      //トップ画面に戻る。
+      self.navigationController?.popToRootViewController(animated: true)
+
+    })
+    // キャンセルボタン
+    let cancelAction = UIAlertAction(title: "キャンセル", style: UIAlertActionStyle.cancel, handler:{(action: UIAlertAction!) in
+      })
+    
+    // UIAlertControllerにActionを追加
+    alert.addAction(cancelAction)
+    alert.addAction(defaultAction)
+    
+    // Alertを表示
+    present(alert, animated: true, completion: nil)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +73,12 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     
     // UserDefaultsからコンタクトの期限日数を取得
     let deadline_days = settings.integer(forKey: "deadline_days")
+    
+    // UserDefaultsからアラーム日付を取得
+    alarm_time = settings.object(forKey: "alarm_time") as? Date
+    
+    let alarm_switch_state = settings.object(forKey: "alarm_switch_state") as? Bool
+    
 
     switch deadline_days {
     case 14:
@@ -59,12 +94,16 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
       break
     }
     
-    // UserDefaultsから現在日付を取得
+    // 現在日付を取得
     today_date = Date()
     
     // Pickerに設定
     dateSettingPicker.date = deadline_date!
-    alarmTimePicker.date = deadline_date!
+    alarmTimePicker.date = alarm_time!
+    
+    if let al_state = alarm_switch_state {
+      alarmSwitch.setOn(al_state, animated: false)
+    }
     
   }
   
@@ -86,16 +125,18 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   @IBOutlet weak var dateSettingPicker: UIDatePicker!
   @IBOutlet weak var alarmSwitch: UISwitch!
   @IBOutlet weak var alarmTimePicker: UIDatePicker!
-  
-  // 通知設定がON/OFFされたときに呼び出されるAction
-  @IBAction func switchChangedAciton(_ sender: Any) {
-    let alarm_date = dateSettingPicker.date
-    let alarm_time = alarmTimePicker.date
+
+  func saveParameters() {
+    // UserDefaulsのインスタンスを生成
+    let settings = UserDefaults.standard
+    
+    let deadline_date_setted = dateSettingPicker.date
+    let alarm_time_setted = alarmTimePicker.date
     
     // 設定された時刻からDateComponetsを設定
-    let settingDate = DateComponents(year: calendar?.component(.year, from: alarm_date), month: calendar?.component(.month, from: alarm_date), day: calendar?.component(.day, from: alarm_date),
-                                     hour: calendar?.component(.hour, from: alarm_time), minute: calendar?.component(.minute, from: alarm_time))
-
+    let settingDate = DateComponents(year: calendar?.component(.year, from: deadline_date_setted), month: calendar?.component(.month, from: deadline_date_setted), day: calendar?.component(.day, from: deadline_date_setted),
+                                     hour: calendar?.component(.hour, from: alarm_time_setted), minute: calendar?.component(.minute, from: alarm_time_setted))
+    
     // もしアラームスイッチがONならばローカル通知設定
     if alarmSwitch.isOn {
       setLocalNotification(settingDate)
@@ -103,19 +144,16 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     else {
       deleteLocalNotification("ContactNotification")
     }
-  }
-  
-  
-  // 期限日付を変更されるAction
-  @IBAction func dateChangedAction(_ sender: Any) {
-    // UserDefaulsのインスタンスを生成
-    let settings = UserDefaults.standard
     
     // UserDefaultsにデータを設定
-    settings.setValue(dateSettingPicker.date, forKey: "deadline_date")
+    settings.setValue(alarmSwitch.isOn, forKey: "alarm_switch_state")
+    settings.setValue(deadline_date_setted, forKey: "deadline_date")
+    settings.setValue(alarm_time_setted, forKey: "alarm_time")
+    
     settings.synchronize()
-  
+    
   }
+
   
   // ローカル通知を設定する関数
   func setLocalNotification(_ date: DateComponents) {
@@ -200,19 +238,6 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
         
         // 期限日付をpickerに設定する
         dateSettingPicker.date = new_deadline_date ?? Date()
-        alarmTimePicker.date = new_deadline_date ?? Date()
-        
-        // UserDefaulsのインスタンスを生成
-        let settings = UserDefaults.standard
-        
-        // 設定したdeadlinedaysをNSDefaultsに設定する
-        settings.setValue(deadline_days, forKey: "deadline_days")
-        
-        // 設定したdeadlinedateをNSDefaultsに設定する
-        settings.setValue(new_deadline_date, forKey: "deadline_date")
-
-        // 同期させる
-        settings.synchronize()
       }
     }
   }

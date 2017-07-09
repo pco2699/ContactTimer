@@ -22,18 +22,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="contacttime" translatesAutoresizingMaskIntoConstraints="NO" id="QZH-Fn-tpv">
-                                <rect key="frame" x="57" y="286" width="300" height="165"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="19964928_1390119321079059_930218263_n" translatesAutoresizingMaskIntoConstraints="NO" id="1et-SJ-iKM">
+                                <rect key="frame" x="107" y="268" width="200" height="200"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="B9s-Mf-sxB"/>
-                                    <constraint firstAttribute="width" secondItem="QZH-Fn-tpv" secondAttribute="height" multiplier="176:97" id="bsp-Bs-MyV"/>
+                                    <constraint firstAttribute="width" secondItem="1et-SJ-iKM" secondAttribute="height" multiplier="1:1" id="M38-7I-qAA"/>
+                                    <constraint firstAttribute="height" constant="200" id="R3E-0t-rIg"/>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="QZH-Fn-tpv" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="72t-KK-nyZ"/>
-                            <constraint firstItem="QZH-Fn-tpv" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Bdb-RH-Q71"/>
+                            <constraint firstItem="1et-SJ-iKM" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="nLL-Ch-C6V"/>
+                            <constraint firstItem="1et-SJ-iKM" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="rdN-Pe-UfT"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -43,6 +43,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="contacttime" width="352" height="194"/>
+        <image name="19964928_1390119321079059_930218263_n" width="401" height="401"/>
     </resources>
 </document>
