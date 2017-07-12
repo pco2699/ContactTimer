@@ -9,7 +9,7 @@
 import UIKit
 import UserNotifications
 
-class SettingViewController: UIViewController, UNUserNotificationCenterDelegate {
+class SettingViewController: UIViewController {
   // 本日の日付を設定する定数
   var today_date: Date?
   // カレンダー設定
@@ -136,17 +136,16 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     let alarm_time_setted = alarmTimePicker.date
     
     // 設定された時刻からDateComponetsを設定
-    let settingDate = DateComponents(year: calendar?.component(.year, from: deadline_date_setted), month: calendar?.component(.month, from: deadline_date_setted), day: calendar?.component(.day, from: deadline_date_setted),
-                                     hour: calendar?.component(.hour, from: alarm_time_setted), minute: calendar?.component(.minute, from: alarm_time_setted))
-    
-    // もしアラームスイッチがONならばローカル通知設定
-    if alarmSwitch.isOn {
-      setLocalNotification(settingDate)
+    if let cal = calendar {
+      let settingDate = returnDateComponentsforNotification(calendar: cal, deadline_date: deadline_date_setted, alarm_time: alarm_time_setted)
+      // もしアラームスイッチがONならばローカル通知設定
+      if alarmSwitch.isOn {
+        setLocalNotification(settingDate)
+      }
+      else {
+        deleteLocalNotification("ContactNotification")
+      }
     }
-    else {
-      deleteLocalNotification("ContactNotification")
-    }
-    
     
     // UserDefaultsにデータを設定
     settings.setValue(alarmSwitch.isOn, forKey: "alarm_switch_state")
@@ -158,44 +157,7 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     
   }
 
-  
-  // ローカル通知を設定する関数
-  func setLocalNotification(_ date: DateComponents) {
-    // UNMutableNotificationContent 作成
-    let content = UNMutableNotificationContent()
-    content.title = "コンタクトアラート"
-    content.body = "コンタクトの期限がきました"
-    content.sound = .default()
-    
-    // UNTimeIntervalNotificationTrigger 作成、
-    let trigger = UNCalendarNotificationTrigger.init(dateMatching: date, repeats: false)
-    
-    // identifier, content, trigger から UNNotificationRequest 作成
-    let request = UNNotificationRequest.init(identifier: "ContactNotification", content: content, trigger: trigger)
-    
-    // UNUserNotificationCenter に request を追加
-    let center = UNUserNotificationCenter.current()
-    center.add(request)
-    // デリゲートを設定
-    center.delegate = self;
-  }
-  
-  // ローカル通知を削除する関数
-  func deleteLocalNotification(_ identifier: String) {
-    // UNUserNotificationCenter に request を追加
-    let center = UNUserNotificationCenter.current()
-    center.removePendingNotificationRequests(withIdentifiers: [identifier])
-  }
-  
-  // アプリが foreground の時に通知を受け取った時に呼ばれるメソッド
-  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    let alert = UIAlertController(title: "コンタクトアラート", message: "コンタクトの期限がきました", preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (alert) in
-      //無処理
-    }))
-    
-    present(alert, animated: true, completion: nil)
-  }
+
   @IBOutlet weak var o_w_button_outlet: EditableButton!
   @IBOutlet weak var t_w_button_outlet: EditableButton!
   @IBOutlet weak var o_m_button_outlet: EditableButton!
@@ -263,4 +225,47 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
       button.backgroundColor = UIColor.white
     }
   }
+}
+
+// アラームタイムと期限時刻からDateComponentsを返す関数
+func returnDateComponentsforNotification(calendar cal: Calendar, deadline_date d_date: Date, alarm_time a_time: Date) ->DateComponents {
+  return DateComponents(year: cal.component(.year, from: d_date), month: cal.component(.month, from: d_date), day: cal.component(.day, from: d_date),
+                 hour: cal.component(.hour, from: a_time), minute: cal.component(.minute, from: a_time))
+}
+
+
+// ローカル通知を設定する関数
+func setLocalNotification(_ date: DateComponents) {
+  // UNMutableNotificationContent 作成
+  let content = UNMutableNotificationContent()
+  content.title = "コンタクトアラート"
+  content.body = "コンタクトの期限がきました"
+  content.sound = .default()
+  
+  deleteLocalNotification("ContactNotification")
+  
+  // UNTimeIntervalNotificationTrigger 作成、
+  let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: false)
+  
+  // identifier, content, trigger から UNNotificationRequest 作成
+  let request = UNNotificationRequest(identifier: "ContactNotification", content: content, trigger: trigger)
+  
+  // UNUserNotificationCenter に request を追加
+  let center = UNUserNotificationCenter.current()
+  center.add(request) {
+    (error) in
+    if let theError = error {
+      print(theError)
+    }
+  }
+}
+
+// ローカル通知を削除する関数
+func deleteLocalNotification(_ identifier: String) {
+  // UNUserNotificationCenter に request を追加
+  let center = UNUserNotificationCenter.current()
+  center.removePendingNotificationRequests(withIdentifiers: [identifier])
+  
+  //通知済みだが、通知を消していない通知を削除
+  center.removeDeliveredNotifications(withIdentifiers: [identifier])
 }

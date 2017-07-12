@@ -30,6 +30,12 @@ class ViewController: UIViewController {
     // 通知の使用許可をリクエスト
     center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
       // Enable or disable features based on authorization.
+      if !granted {
+        //許可が得られなかったので確認表示を行う
+        let controller = UIAlertController(title: "確認", message: "通知を許可する場合には「設定＞通知」にてオンにする設定をしてください", preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(controller, animated: true, completion: nil)
+      }
     }
     
     // UserDefaulsのインスタンスを生成
@@ -86,14 +92,21 @@ class ViewController: UIViewController {
   @IBAction func resetButtonAction(_ sender: Any) {
     // deadline_dateをdeadline_daysを加算する。
     deadline_date = calendar?.date(byAdding: .day, value: deadline_days!, to: today_date!)
-    print("hoge")
-    print(deadline_days!)
+    
+    // UserDefaultsを呼び出し
+    let settings = UserDefaults.standard
+    
+    // alarm timeを取得
+    let alarm_time = settings.object(forKey: "alarm_time") as? Date
     
     // ラベルを設定
     daysLabel.text = deadline_days?.description
     
-    // UserDefaultsのインスタンスを生成
-    let settings = UserDefaults.standard
+    // Notificationの再設定
+    if let cal = calendar, let d_date = deadline_date, let a_time = alarm_time {
+      let settingDate = returnDateComponentsforNotification(calendar: cal, deadline_date: d_date, alarm_time: a_time)
+      setLocalNotification(settingDate)
+    }
     
     // UserDefaultsに次の日程を設定
     settings.setValue(deadline_date, forKey: "deadline_date")
