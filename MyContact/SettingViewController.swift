@@ -79,7 +79,7 @@ class SettingViewController: UIViewController {
     // UserDefaultsからアラーム日付を取得
     alarm_time = settings.object(forKey: "alarm_time") as? Date
     
-    let alarm_switch_state = settings.object(forKey: "alarm_switch_state") as? Bool
+    let alarm_switch_state = settings.bool(forKey: "alarm_switch_state")
     
 
     switch deadline_days! {
@@ -103,10 +103,7 @@ class SettingViewController: UIViewController {
     dateSettingPicker.date = deadline_date!
     alarmTimePicker.date = alarm_time!
     
-    if let al_state = alarm_switch_state {
-      alarmSwitch.setOn(al_state, animated: false)
-    }
-    
+    alarmSwitch.setOn(alarm_switch_state, animated: false)
   }
   
   override func didReceiveMemoryWarning() {

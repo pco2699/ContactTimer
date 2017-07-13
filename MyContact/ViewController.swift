@@ -72,7 +72,7 @@ class ViewController: UIViewController {
     deadline_days = settings.integer(forKey: "deadline_days")
     
     // 現在の残り日数を計算
-    var deadline_days_now = calendar?.dateComponents([.day], from: today_date!, to: deadline_date!).day
+    var deadline_days_now = calendar?.dateComponents([.day], from: roundDate(today_date!, calendar: calendar!), to: roundDate(deadline_date!, calendar: calendar!)).day
     
     // 0日以下だったら0に設定
     if deadline_days_now! < 0 {
@@ -99,13 +99,19 @@ class ViewController: UIViewController {
     // alarm timeを取得
     let alarm_time = settings.object(forKey: "alarm_time") as? Date
     
+    // switchがonかどうかを取得
+    let alarm_switch = settings.bool(forKey: "alarm_switch_state")
+    
+    
     // ラベルを設定
     daysLabel.text = deadline_days?.description
     
-    // Notificationの再設定
-    if let cal = calendar, let d_date = deadline_date, let a_time = alarm_time {
-      let settingDate = returnDateComponentsforNotification(calendar: cal, deadline_date: d_date, alarm_time: a_time)
-      setLocalNotification(settingDate)
+    if alarm_switch {
+      // Notificationの再設定
+      if let cal = calendar, let d_date = deadline_date, let a_time = alarm_time {
+        let settingDate = returnDateComponentsforNotification(calendar: cal, deadline_date: d_date, alarm_time: a_time)
+        setLocalNotification(settingDate)
+      }
     }
     
     // UserDefaultsに次の日程を設定
@@ -116,6 +122,11 @@ class ViewController: UIViewController {
   @IBAction func settingButtonAction(_ sender: Any) {
     // 設定画面へ画面遷移
     performSegue(withIdentifier: "goSetting", sender: nil)
+  }
+  
+  // Dateから年日月を抽出する関数
+  func roundDate(_ date: Date, calendar cal: Calendar) -> Date {
+    return cal.date(from: DateComponents(year: cal.component(.year, from: date), month: cal.component(.month, from: date), day: cal.component(.day, from: date)))!
   }
 }
 
