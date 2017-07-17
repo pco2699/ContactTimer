@@ -63,6 +63,7 @@ class ViewController: UIViewController {
     
     // UserDefaultsからコンタクトの期限を取得
     deadline_date = settings.object(forKey: "deadline_date") as? Date
+    deadline_days = settings.integer(forKey: "deadline_days")
     
     // 現在の残り日数を計算
     var deadline_days_now = calendar?.dateComponents([.day], from: today_date!, to: deadline_date!).day
@@ -85,6 +86,8 @@ class ViewController: UIViewController {
   @IBAction func resetButtonAction(_ sender: Any) {
     // deadline_dateをdeadline_daysを加算する。
     deadline_date = calendar?.date(byAdding: .day, value: deadline_days!, to: today_date!)
+    print("hoge")
+    print(deadline_days!)
     
     // ラベルを設定
     daysLabel.text = deadline_days?.description

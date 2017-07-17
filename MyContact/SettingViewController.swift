@@ -18,6 +18,8 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
   var deadline_date: Date?
   // アラーム時刻
   var alarm_time: Date?
+  // 期限日数
+  var deadline_days: Int?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -72,7 +74,7 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     deadline_date = settings.object(forKey: "deadline_date") as? Date
     
     // UserDefaultsからコンタクトの期限日数を取得
-    let deadline_days = settings.integer(forKey: "deadline_days")
+    deadline_days = settings.integer(forKey: "deadline_days")
     
     // UserDefaultsからアラーム日付を取得
     alarm_time = settings.object(forKey: "alarm_time") as? Date
@@ -80,7 +82,7 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     let alarm_switch_state = settings.object(forKey: "alarm_switch_state") as? Bool
     
 
-    switch deadline_days {
+    switch deadline_days! {
     case 14:
       t_w_button_action(self)
       break
@@ -145,10 +147,12 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
       deleteLocalNotification("ContactNotification")
     }
     
+    
     // UserDefaultsにデータを設定
     settings.setValue(alarmSwitch.isOn, forKey: "alarm_switch_state")
     settings.setValue(deadline_date_setted, forKey: "deadline_date")
     settings.setValue(alarm_time_setted, forKey: "alarm_time")
+    settings.setValue(deadline_days, forKey: "deadline_days")
     
     settings.synchronize()
     
@@ -228,13 +232,14 @@ class SettingViewController: UIViewController, UNUserNotificationCenterDelegate 
     changeDeadlineDate(sender, days: 30)
   }
   
-  func changeDeadlineDate(_ sender: Any, days deadline_days: Int) {
+  func changeDeadlineDate(_ sender: Any, days new_deadline_days: Int) {
     // ボタンとして叩かれた場合のみ期限を設定する
     if sender is UIButton {
       
       if let today_date_wrd = today_date, let calendar_wrd = calendar {
         // 期限を現在の日付 + 期限日付にする
-        let new_deadline_date = calendar_wrd.date(byAdding: .day, value: deadline_days, to: today_date_wrd)
+        deadline_days = new_deadline_days
+        let new_deadline_date = calendar_wrd.date(byAdding: .day, value: new_deadline_days, to: today_date_wrd)
         
         // 期限日付をpickerに設定する
         dateSettingPicker.date = new_deadline_date ?? Date()
