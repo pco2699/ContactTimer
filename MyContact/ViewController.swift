@@ -64,6 +64,9 @@ class ViewController: UIViewController {
   }
   
   override func viewWillAppear(_ animated: Bool) {
+    // 現在の日付のDate型を取得
+    today_date = Date()
+    
     // UserDefaulsのインスタンスを生成
     let settings = UserDefaults.standard
     
